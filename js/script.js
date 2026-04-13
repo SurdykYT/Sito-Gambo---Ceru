@@ -5,7 +5,7 @@
     const products = [
         {
             id: 1,
-            name: "Giacca",
+            name: "Giacca utility in cotone",
             category: "Abbigliamento",
             price: 129.99,
             originalPrice: 189.99,
@@ -14,7 +14,7 @@
         },
         {
             id: 2,
-            name: "Felpa",
+            name: "Felpa minimal oversize",
             category: "Felpe",
             price: 64.50,
             originalPrice: null,
@@ -23,7 +23,7 @@
         },
         {
             id: 3,
-            name: "Pantaloni",
+            name: "Pantaloni cargo relaxed",
             category: "Pantaloni",
             price: 89.90,
             originalPrice: 110.00,
@@ -32,7 +32,7 @@
         },
         {
             id: 4,
-            name: "T-shirt",
+            name: "T-shirt organic cotton",
             category: "T-shirt",
             price: 34.99,
             originalPrice: null,
@@ -41,7 +41,7 @@
         },
         {
             id: 5,
-            name: "Sneakers",
+            name: "Sneakers unisex canvas",
             category: "Scarpe",
             price: 79.95,
             originalPrice: 99.95,
@@ -56,15 +56,6 @@
             originalPrice: null,
             image: "https://placehold.co/400x500/e2e1dd/2a2e35?text=Borsa",
             imgAlt: "Borsa"
-        },
-         {
-            id: 7,
-            name: "Mutande",
-            category: "Abbigliamento",
-            price: 7.90,
-            originalPrice: 11.99,
-            image: "https://placehold.co/400x500/e2e1dd/2a2e35?text=Mutande",
-            imgAlt: "Mutande"
         }
     ];
 
@@ -76,11 +67,16 @@
     const cartCountSpan = document.getElementById('cart-count');
     const cartItemsDiv = document.getElementById('cartItemsContainer');
     const cartTotalSpan = document.getElementById('cartTotalPrice');
-    const cartOverlay = document.getElementById('cartOverlay');
     const cartDrawer = document.getElementById('cartDrawer');
     const cartToggleBtn = document.getElementById('cartToggleBtn');
     const closeCartBtn = document.getElementById('closeCartBtn');
     const checkoutBtn = document.getElementById('checkoutBtn');
+
+    // Menu sinistro
+    const menuDrawer = document.getElementById('menuDrawer');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const globalOverlay = document.getElementById('globalOverlay');
 
     // ---------- FUNZIONI RENDER ----------
     function renderProducts() {
@@ -222,22 +218,68 @@
 
     // ---------- CONTROLLI CARRELLO (APRI/CHIUDI) ----------
     function openCart() {
-        cartOverlay.classList.add('active');
+        closeMenu(); // Chiude il menu se aperto
         cartDrawer.classList.add('active');
+        globalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
     function closeCart() {
-        cartOverlay.classList.remove('active');
         cartDrawer.classList.remove('active');
-        document.body.style.overflow = '';
+        if (!menuDrawer.classList.contains('active')) {
+            globalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // ---------- CONTROLLI MENU SINISTRO ----------
+    function openMenu() {
+        closeCart(); // Chiude il carrello se aperto
+        menuDrawer.classList.add('active');
+        globalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        menuDrawer.classList.remove('active');
+        if (!cartDrawer.classList.contains('active')) {
+            globalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Chiudi tutto (overlay click)
+    function closeAllDrawers() {
+        closeCart();
+        closeMenu();
     }
 
     // ---------- EVENT LISTENER GLOBALI ----------
     function initEvents() {
-        cartToggleBtn.addEventListener('click', openCart);
+        // Carrello
+        cartToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (cartDrawer.classList.contains('active')) {
+                closeCart();
+            } else {
+                openCart();
+            }
+        });
         closeCartBtn.addEventListener('click', closeCart);
-        cartOverlay.addEventListener('click', closeCart);
+
+        // Menu
+        menuToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (menuDrawer.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+        closeMenuBtn.addEventListener('click', closeMenu);
+
+        // Overlay
+        globalOverlay.addEventListener('click', closeAllDrawers);
 
         // Checkout simulato
         checkoutBtn.addEventListener('click', () => {
@@ -246,7 +288,6 @@
                 return;
             }
             alert(`✅ Grazie per l'ordine!\nTotale: ${cartTotalSpan.textContent}\n(Simulazione template)`);
-            // Svuota carrello (opzionale)
             cart = [];
             updateCartUI();
             closeCart();
@@ -254,10 +295,14 @@
 
         // Chiudi con tasto ESC
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && cartDrawer.classList.contains('active')) {
-                closeCart();
+            if (e.key === 'Escape') {
+                closeAllDrawers();
             }
         });
+
+        // Previeni chiusura quando si clicca dentro i drawer
+        menuDrawer.addEventListener('click', (e) => e.stopPropagation());
+        cartDrawer.addEventListener('click', (e) => e.stopPropagation());
     }
 
     // ---------- INIZIALIZZA ----------
