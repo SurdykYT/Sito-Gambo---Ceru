@@ -11,9 +11,36 @@
 </head>
 <body>
 
+<!-- OVERLAY GENERICO (usato sia per carrello che per menu) -->
+<div class="global-overlay" id="globalOverlay"></div>
+
+<!-- MENU LATERALE SINISTRO -->
+<div class="menu-drawer" id="menuDrawer">
+    <div class="menu-header">
+        <h3>Menu</h3>
+        <button class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="menu-nav">
+        <ul>
+            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#"><i class="fas fa-tshirt"></i> Nuovi arrivi</a></li>
+            <li><a href="#"><i class="fas fa-male"></i> Uomo</a></li>
+            <li><a href="#"><i class="fas fa-female"></i> Donna</a></li>
+            <li><a href="#"><i class="fas fa-gem"></i> Accessori</a></li>
+            <li><a href="#"><i class="fas fa-tags"></i> Offerte</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contatti</a></li>
+        </ul>
+    </nav>
+</div>
+
 <!-- HEADER -->
 <header class="navbar">
-    <a href="#" class="logo">Velvet<span>.</span></a>
+    <div class="nav-left">
+        <button class="menu-toggle" id="menuToggleBtn" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="#" class="logo">Velvet<span>.</span></a>
+    </div>
     <div class="nav-icons">
         <div class="cart-icon-wrapper" id="cartToggleBtn">
             <i class="fas fa-shopping-bag"></i>
@@ -34,8 +61,7 @@
     © 2026 Velvet Store — Template e-commerce reattivo
 </div>
 
-<!-- CARRELLO OVERLAY & DRAWER -->
-<div class="cart-overlay" id="cartOverlay"></div>
+<!-- CARRELLO LATERALE DESTRO -->
 <div class="cart-drawer" id="cartDrawer">
     <div class="cart-header">
         <h3>Il tuo carrello</h3>
